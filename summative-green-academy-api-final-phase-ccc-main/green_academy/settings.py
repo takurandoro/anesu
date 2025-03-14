@@ -94,7 +94,7 @@ if 'test' in sys.argv:
 else:
     # Main DB (example with Postgres)
     DATABASES['default'] = dj_database_url.config(
-        default='postgres://admin:password@localhost:5432/greenacademy'
+        default=os.environ.get('DATABASE_URL', 'postgres://admin:password@localhost:5432/greenacademy')
     )
 
 DATABASES['default']['OPTIONS'] = {
