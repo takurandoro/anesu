@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.generics import ListAPIView
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import Enrollment
 from users.models import User
 from courses.models import Course
@@ -11,6 +13,17 @@ class EnrollInCourseView(APIView):
     """
     POST:  { "student_id": <int>, "course_id": <int> }
     """
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'student_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the student'),
+                'course_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the course'),
+            },
+            required=['student_id', 'course_id']
+        ),
+        responses={201: 'Enrollment successful!', 400: 'Bad Request', 404: 'Not Found'}
+    )
     def post(self, request):
         student_id = request.data.get('student_id')
         course_id = request.data.get('course_id')

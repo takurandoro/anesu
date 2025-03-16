@@ -1,19 +1,13 @@
 from rest_framework import permissions
 
-class IsInstructorOrAdmin(permissions.BasePermission):
-    """
-    Custom permission: Only instructors or admins can create/update courses.
-    """
-
+class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and (request.user.role == 'admin' or request.user.role == 'instructor')
-
-class IsStudentOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission: Students can only view courses, not modify them.
-    """
-
+        return request.user.is_authenticated and request.user.role == 'admin'
+    
+class IsStudent(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user.is_authenticated and request.user.role != 'student'
+        return request.user.is_authenticated and request.user.role == 'student'
+
+class IsInstructor(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'instructor'

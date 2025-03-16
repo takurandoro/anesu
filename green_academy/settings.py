@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'green_academy.wsgi.application'
 DATABASES = {}
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgres://admin:password@localhost:5432/greenacademy')
+        default=os.environ.get('DATABASE_URL', 'postgres://unicorn:password@localhost:5432/greenacademy')
     )
 }
 

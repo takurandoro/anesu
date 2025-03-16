@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.core.cache import cache
 from .models import Course
 from .serializers import CourseSerializer
-from .permissions import IsInstructorOrAdmin, IsStudentOrReadOnly
+from .permissions import IsStudent, IsInstructor, IsAdmin
 
 class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = CourseSerializer
@@ -11,11 +11,17 @@ class CourseListCreateView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         """
-        Only admins can create new courses, everyone else can read.
+        Only instructors can create new courses.
+        Only admins can edit existing courses.
+        Everyone can read courses.
         """
         if self.request.method == "POST":
-            # Example: only 'admin' users can create
-            return [IsInstructorOrAdmin()]
+            # Only 'admin' users can create
+            return [IsInstructor()]
+        
+        if self.request.method in ["PUT", "PATCH", "DELETE"]:
+            return [IsAdmin()]
+
         return [permissions.AllowAny()]
 
     def list(self, request, *args, **kwargs):
